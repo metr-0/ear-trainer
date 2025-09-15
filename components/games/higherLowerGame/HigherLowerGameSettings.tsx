@@ -1,0 +1,1 @@
+class HigherLowerGameSettings extends GameSettings {}
