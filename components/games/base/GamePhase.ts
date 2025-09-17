@@ -3,3 +3,5 @@ enum GamePhase {
   INPUT,
   CHECK
 }
+
+export default GamePhase;

@@ -2,6 +2,7 @@ import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {useRouter} from "expo-router";
 import HigherLowerGame from "@/components/games/HigherLowerGame";
+import HLGameScreen from "@/components/games/higherLowerGame/HLGameScreen";
 
 export default function GameScreen() {
   const router = useRouter();
@@ -16,7 +17,7 @@ export default function GameScreen() {
         <Ionicons name="settings" size={24} color="white" />
       </TouchableOpacity>
 
-      <HigherLowerGame />
+      <HLGameScreen />
     </View>
   );
 }

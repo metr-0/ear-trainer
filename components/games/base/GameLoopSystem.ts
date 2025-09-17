@@ -1,8 +1,10 @@
 import { GameEngineUpdateEventOptionType } from "react-native-game-engine";
+import GamePhase from "@/components/games/base/GamePhase";
+import GameState from "@/components/games/base/GameState";
+import GameSettings from "@/components/games/base/GameSettings";
+import GamePhaseListener from "@/components/games/base/GamePhaseListener";
 
-type PhaseListener = (phase: GamePhase) => void;
-
-export class GameLoopSystem {
+export default class GameLoopSystem {
   private readonly gameState: GameState;
   private readonly settings: GameSettings;
 
@@ -12,7 +14,7 @@ export class GameLoopSystem {
   private elapsed: number = 0;
   private currentPhaseTime: number = 0;
 
-  private readonly listeners: PhaseListener[] = [];
+  private readonly listeners: GamePhaseListener[] = [];
 
   constructor(state: GameState, settings: GameSettings) {
     this.gameState = state;
@@ -20,9 +22,11 @@ export class GameLoopSystem {
 
     this.phaseDuration = 60 / this.settings.bpm;
     this.gameState.phase = GamePhase.PREP;
+
+    this.start();
   }
 
-  public onPhaseChange(listener: PhaseListener) {
+  public onPhaseChange(listener: GamePhaseListener) {
     this.listeners.push(listener);
   }
 
