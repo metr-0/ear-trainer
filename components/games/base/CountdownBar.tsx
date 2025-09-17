@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import { Animated, View } from "react-native";
 import useHLGameScales from "@/components/games/higherLowerGame/useHLGameScales";
 import CountdownEventListener from "@/components/games/base/CountdownEventListener";
@@ -8,18 +8,24 @@ const CountdownBar = ({ anim, onCountdownEvent }:
                         { anim: Animated.Value, onCountdownEvent: (listener: CountdownEventListener) => void }) => {
 
   const scales = useHLGameScales();
-  const [visible, setVisible] = useState(false);
+  const slideAnim = useRef(new Animated.Value(scales.screen.height * .3)).current;
 
   useEffect(() => {
     onCountdownEvent(event => {
       switch (event) {
         case CountdownEvent.STARTED:
-          setVisible(true);
-          console.log("start")
+          Animated.timing(slideAnim, {
+            toValue: 0,
+            duration: 100,
+            useNativeDriver: true,
+          }).start();
           break;
         case CountdownEvent.COMPLETED:
-          setVisible(false);
-          console.log("stop")
+          Animated.timing(slideAnim, {
+            toValue: scales.screen.height * .3,
+            duration: 100,
+            useNativeDriver: true,
+          }).start();
           break;
       }
     });
@@ -31,22 +37,33 @@ const CountdownBar = ({ anim, onCountdownEvent }:
   });
 
   return (
-    visible && <View style={{
-      height: scales.countdownBar.height,
-      width: scales.countdownBar.width,
-      backgroundColor: "#262626",
-      border: scales.countdownBar.height * .1,
-      borderColor: "#e6e6e6", borderStyle: "solid",
-      borderRadius: scales.countdownBar.height * .3,
-      overflow: "hidden"
-    }}>
-      <Animated.View style={{
-        height: "100%",
-        width: "100%",
-        backgroundColor: "#e6e6e6",
-        transform: [{ translateX }] as any,
-      }} />
-    </View>
+    <Animated.View
+      style={{
+        transform: [{ translateY: slideAnim }] as any,
+      }}
+    >
+      <View
+        style={{
+          height: scales.countdownBar.height,
+          width: scales.countdownBar.width,
+          backgroundColor: "#262626",
+          borderWidth: scales.countdownBar.height * 0.1,
+          borderColor: "#e6e6e6",
+          borderStyle: "solid",
+          borderRadius: scales.countdownBar.height * 0.3,
+          overflow: "hidden",
+        }}
+      >
+        <Animated.View
+          style={{
+            height: "100%",
+            width: "100%",
+            backgroundColor: "#e6e6e6",
+            transform: [{ translateX }] as any,
+          }}
+        />
+      </View>
+    </Animated.View>
   );
 };
 
