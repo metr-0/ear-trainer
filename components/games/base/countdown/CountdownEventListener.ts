@@ -1,4 +1,4 @@
-import CountdownEvent from "@/components/games/base/CountdownEvent";
+import CountdownEvent from "@/components/games/base/countdown/CountdownEvent";
 
 type CountdownEventListener = (event: CountdownEvent) => void;
 

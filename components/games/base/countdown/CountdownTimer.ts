@@ -1,16 +1,14 @@
 import {Animated, Easing} from "react-native";
-import {GameEngineUpdateEventOptionType} from "react-native-game-engine";
-import CountdownEventListener from "@/components/games/base/CountdownEventListener";
-import CountdownEvent from "@/components/games/base/CountdownEvent";
+import CountdownEventListener from "@/components/games/base/countdown/CountdownEventListener";
+import CountdownEvent from "@/components/games/base/countdown/CountdownEvent";
 
-export default class CountdownSystem {
+export default class CountdownTimer {
   private readonly anim: Animated.Value;
   private readonly duration: number;
 
   private readonly listeners: CountdownEventListener[] = [];
 
   private animation?: Animated.CompositeAnimation;
-  private startTime: number = 0;
 
   constructor(durationMs: number, anim: Animated.Value) {
     this.anim = anim;
@@ -30,25 +28,18 @@ export default class CountdownSystem {
       useNativeDriver: false,
     });
 
-    this.animation.start();
+    this.animation.start(({ finished }) => {
+      if (finished) {
+        this.emit(CountdownEvent.COMPLETED);
+      }
+    });
 
-    this.startTime = Date.now();
     this.emit(CountdownEvent.STARTED);
   }
 
   public onEvent = (listener: CountdownEventListener) => {
     this.listeners.push(listener);
-    if (Date.now() - this.startTime < this.duration) listener(CountdownEvent.STARTED);
   }
 
   private emit = (event: CountdownEvent) => this.listeners.forEach(listener => listener(event));
-
-  public system = (entities: any, _options: GameEngineUpdateEventOptionType) => {
-    if (this.startTime && Date.now() - this.startTime > this.duration) {
-      this.startTime = 0;
-      this.emit(CountdownEvent.COMPLETED);
-    }
-
-    return entities;
-  };
 }

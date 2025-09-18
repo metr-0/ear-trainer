@@ -1,17 +1,29 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef} from "react";
 import { Animated, View } from "react-native";
-import useHLGameScales from "@/components/games/higherLowerGame/useHLGameScales";
-import CountdownEventListener from "@/components/games/base/CountdownEventListener";
-import CountdownEvent from "@/components/games/base/CountdownEvent";
+import CountdownEvent from "@/components/games/base/countdown/CountdownEvent";
+import CountdownTimer from "@/components/games/base/countdown/CountdownTimer";
+import GamePhase from "@/components/games/base/GamePhase";
+import GameLoop from "@/components/games/base/GameLoop";
 
-const CountdownBar = ({ anim, onCountdownEvent }:
-                        { anim: Animated.Value, onCountdownEvent: (listener: CountdownEventListener) => void }) => {
+const CountdownBar = ({ duration, scales, loop }: {
+  duration: number,
+  scales: any,
+  loop: GameLoop
+}) => {
 
-  const scales = useHLGameScales();
+  const countdownAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(scales.screen.height * .3)).current;
 
+  const timer = useRef(new CountdownTimer(duration, countdownAnim)).current;
+
   useEffect(() => {
-    onCountdownEvent(event => {
+    loop.onPhaseChange(phase => {
+      if (phase === GamePhase.INPUT) timer.start();
+    });
+  }, [loop, timer]);
+
+  useEffect(() => {
+    timer.onEvent(event => {
       switch (event) {
         case CountdownEvent.STARTED:
           Animated.timing(slideAnim, {
@@ -29,9 +41,9 @@ const CountdownBar = ({ anim, onCountdownEvent }:
           break;
       }
     });
-  }, [])
+  }, [timer, scales.screen.height])
 
-  const translateX = anim.interpolate({
+  const translateX = countdownAnim.interpolate({
     inputRange: [0, 1],
     outputRange: [0, -scales.countdownBar.width],
   });

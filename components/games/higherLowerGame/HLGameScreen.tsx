@@ -1,16 +1,15 @@
 import React, {useEffect, useRef} from "react";
-import {GameEngine} from "react-native-game-engine";
-import BackgroundSystem from "@/components/games/base/GameBackgroundSystem";
 import {HLGameBackground} from "@/components/games/higherLowerGame/HLGameBackground";
-import GameLoopSystem from "@/components/games/base/GameLoopSystem";
 import GameMode from "@/components/games/base/GameMode";
 import HLGameSettings from "@/components/games/higherLowerGame/HLGameSettings";
 import HLGameState from "@/components/games/higherLowerGame/HLGameState";
-import {Animated, View} from "react-native";
+import {View} from "react-native";
 import useHLGameScales from "@/components/games/higherLowerGame/useHLGameScales";
-import CountdownBar from "@/components/games/base/CountdownBar";
-import CountdownSystem from "@/components/games/base/CountdownSystem";
-import GamePhase from "@/components/games/base/GamePhase";
+import CountdownBar from "@/components/games/base/countdown/CountdownBar";
+import GameLoop from "@/components/games/base/GameLoop";
+import usePlayer from "@/components/games/base/player/usePlayer";
+import InputHandler from "@/components/games/base/input/InputHandler";
+import InputEvent from "@/components/games/base/input/InputEvent";
 
 export default function HLGameScreen() {
   const bpm = 60;
@@ -19,32 +18,42 @@ export default function HLGameScreen() {
   const settings = useRef(new HLGameSettings(bpm, GameMode.INFINITE, 0)).current;
   const scales = useHLGameScales();
 
-  const bgAnim = useRef(new Animated.Value(0)).current;
-  const bgSystem = useRef(new BackgroundSystem(settings.bpm, bgAnim, scales.lane.width)).current;
+  const loop = useRef(new GameLoop(state, settings)).current;
 
-  const countdownAnim = useRef(new Animated.Value(0)).current;
-  const countdownSystem = useRef(new CountdownSystem(60 / 2 / bpm * 1000, countdownAnim)).current;
+  const player = usePlayer({
+    front: require("../../../assets/images/player/playerNote.png"),
+    back: require("../../../assets/images/player/player.png")
+  });
 
-  const loopSystem = useRef(new GameLoopSystem(state, settings)).current;
+  const inputHandler = useRef(new InputHandler()).current;
 
   useEffect(() => {
-    loopSystem.onPhaseChange(phase => {
-      if (phase === GamePhase.INPUT) countdownSystem.start();
-    })
-  })
+    inputHandler.onInput((event) => {
+      switch (event) {
+        case InputEvent.MOVE_UP:
+          player.controller.moveUp();
+          break;
+        case InputEvent.MOVE_DOWN:
+          player.controller.moveDown();
+          break;
+      }
+    });
+
+    return () => inputHandler.cleanup();
+  }, [inputHandler]);
+
+  useEffect(() => {
+    loop.start();
+    return () => loop.stop();
+  }, [loop]);
 
   return (
-    <GameEngine
-      systems={[
-        bgSystem.system,
-        loopSystem.system,
-        countdownSystem.system
-      ]}
-      entities={{}}
-      style={{ flex: 1 }}
+    <View
+      style={{ flex: 1, userSelect: 'none' }}
+      {...inputHandler.getResponder()}
     >
       <HLGameBackground
-        anim={bgAnim}
+        bpm={bpm}
         laneImages={[
           require("../../../assets/images/lanes/silk/silk1.png"),
           require("../../../assets/images/lanes/silk/silk2.png"),
@@ -57,8 +66,15 @@ export default function HLGameScreen() {
         bottom: (scales.screen.height - 3 * scales.lane.height - 2 * scales.lane.dividerHeight) / 2
           - scales.countdownBar.height - 2 * scales.lane.dividerHeight
       }}>
-        <CountdownBar anim={countdownAnim} onCountdownEvent={countdownSystem.onEvent} />
+        <CountdownBar scales={scales} duration={60 / 2 / bpm * 1000} loop={loop} />
       </View>
-    </GameEngine>
+      <View style={{
+        position: "absolute", top: scales.screen.height / 2, bottom: scales.screen.height / 2,
+        left: scales.screen.width / 2, right: scales.screen.width / 2,
+        display: "flex", alignItems: "center", justifyContent: "center"
+      }}>
+        <player.View />
+      </View>
+    </View>
   );
 }

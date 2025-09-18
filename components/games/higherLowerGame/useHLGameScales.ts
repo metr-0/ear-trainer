@@ -15,7 +15,12 @@ const useHLGameScales = () => {
 
   const countdownBar = {
     width: screenWidth * .5,
-    height:screenHeight * .05
+    height: screenHeight * .05
+  }
+
+  const player = {
+    width: laneHeight - dividerHeight * 5,
+    height: laneHeight - dividerHeight * 5
   }
 
   const [imageWidth, setImageWidth] = useState<number>(1);
@@ -40,7 +45,7 @@ const useHLGameScales = () => {
     screen: { width: screenWidth, height: screenHeight },
     lane: { height: laneHeight, width: laneWidth, dividerHeight },
     laneImages: LANE_IMAGES,
-    countdownBar
+    countdownBar, player
   };
 };
 
