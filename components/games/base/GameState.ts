@@ -1,4 +1,4 @@
-import GamePhase from "@/components/games/base/GamePhase";
+import GamePhase from "@/components/games/base/loop/GamePhase";
 
 export default class GameState {
   phase: GamePhase;

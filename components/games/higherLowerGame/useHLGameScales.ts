@@ -18,6 +18,11 @@ const useHLGameScales = () => {
     height: screenHeight * .05
   }
 
+  const indicator = {
+    width: screenWidth,
+    height: screenHeight * .05
+  }
+
   const player = {
     width: laneHeight - dividerHeight * 5,
     height: laneHeight - dividerHeight * 5
@@ -45,7 +50,7 @@ const useHLGameScales = () => {
     screen: { width: screenWidth, height: screenHeight },
     lane: { height: laneHeight, width: laneWidth, dividerHeight },
     laneImages: LANE_IMAGES,
-    countdownBar, player
+    countdownBar, player, indicator
   };
 };
 

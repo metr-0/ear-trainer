@@ -2,8 +2,8 @@ import React, {useEffect, useRef} from "react";
 import { Animated, View } from "react-native";
 import CountdownEvent from "@/components/games/base/countdown/CountdownEvent";
 import CountdownTimer from "@/components/games/base/countdown/CountdownTimer";
-import GamePhase from "@/components/games/base/GamePhase";
-import GameLoop from "@/components/games/base/GameLoop";
+import GamePhase from "@/components/games/base/loop/GamePhase";
+import GameLoop from "@/components/games/base/loop/GameLoop";
 
 const CountdownBar = ({ duration, scales, loop }: {
   duration: number,

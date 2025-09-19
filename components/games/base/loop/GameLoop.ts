@@ -1,7 +1,7 @@
-import GamePhase from "@/components/games/base/GamePhase";
+import GamePhase from "@/components/games/base/loop/GamePhase";
 import GameState from "@/components/games/base/GameState";
 import GameSettings from "@/components/games/base/GameSettings";
-import GamePhaseListener from "@/components/games/base/GamePhaseListener";
+import GamePhaseListener from "@/components/games/base/loop/GamePhaseListener";
 
 export default class GameLoop {
   private readonly gameState: GameState;
