@@ -142,7 +142,7 @@ const Player = ({ scales, registerLaneController, registerColorController, regis
           position: "relative",
           width: scales.player.width,
           height: scales.player.height,
-          zIndex: 1
+          zIndex: 2
         }, animatedTransform]}
       >
         <Image

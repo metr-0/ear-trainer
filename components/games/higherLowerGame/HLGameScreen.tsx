@@ -18,6 +18,7 @@ import useGameStore from "@/store/useGameStore";
 import {defaultColors} from "@/constants/Colors";
 import useCountdownController from "@/components/games/base/countdown/useCountdownController";
 import Score from "@/components/games/base/score/Score";
+import useObstaclesController from "@/components/games/base/obstacle/useObstaclesController";
 
 export default function HLGameScreen() {
   const bpm = 30;
@@ -32,6 +33,7 @@ export default function HLGameScreen() {
   const player = usePlayerController(scales);
   const indicator = useIndicatorController(scales);
   const countdown = useCountdownController(scales);
+  const obstacles = useObstaclesController();
 
   const inputHandler = useRef(new InputHandler()).current;
 
@@ -62,13 +64,17 @@ export default function HLGameScreen() {
         player.setColor(PlayerColor.NEUTRAL);
       } else if (phase === GamePhase.CHECK) {
         const answer = player.getLane();
-        player.moveTo(0);
 
-        const correct = answer === 0;
+        const correctLane = Math.floor(Math.random() * 3) - 1;
+        const correct = answer === correctLane;
 
         const gameStore = useGameStore.getState();
         gameStore.incTotalScore();
         if (correct) gameStore.incCorrectScore();
+
+        obstacles.show(correctLane);
+        player.moveTo(correctLane);
+        setTimeout(() => player.moveTo(0), 60 / bpm / 4 * 1000);
 
         indicator.show(correct);
         player.setColor(correct ? PlayerColor.CORRECT : PlayerColor.MISTAKE);
@@ -106,7 +112,7 @@ export default function HLGameScreen() {
           position: "absolute",
           top: scales.screen.height * .04,
           right: scales.screen.height * .04,
-          zIndex: 2
+          zIndex: 3
         }}
         onPress={() => {
           setPaused(true);
@@ -126,7 +132,8 @@ export default function HLGameScreen() {
       <View style={{
         display: "flex", flexDirection: "column", alignItems: "center",
         position: "absolute", width: scales.screen.width,
-        bottom: scales.screen.height * .04
+        bottom: scales.screen.height * .04,
+        zIndex: 1
       }}>
         <ProgressBar scales={scales} duration={60 / 2 / bpm * 1000} loop={loop} />
       </View>
@@ -134,7 +141,8 @@ export default function HLGameScreen() {
       <View style={{
         display: "flex", flexDirection: "column", alignItems: "center",
         position: "absolute", width: scales.screen.width,
-        bottom: scales.screen.height * .04
+        bottom: scales.screen.height * .04,
+        zIndex: 1
       }}>
         <countdown.View />
       </View>
@@ -142,7 +150,8 @@ export default function HLGameScreen() {
       <View style={{
         display: "flex", flexDirection: "column", alignItems: "center",
         position: "absolute", width: scales.screen.width,
-        bottom: scales.screen.height * .12
+        bottom: scales.screen.height * .12,
+        zIndex: 1
       }}>
         <indicator.View />
       </View>
@@ -150,9 +159,18 @@ export default function HLGameScreen() {
       <View style={{
         position: "absolute", top: scales.screen.height / 2, bottom: scales.screen.height / 2,
         left: scales.screen.width / 2, right: scales.screen.width / 2,
-        display: "flex", alignItems: "center", justifyContent: "center"
+        display: "flex", alignItems: "center", justifyContent: "center",
+        zIndex: 1
       }}>
         <player.View />
+      </View>
+
+      <View style={{
+        position: "absolute",
+        top: scales.screen.height / 2,
+        left: scales.screen.width / 2,
+      }}>
+        <obstacles.View />
       </View>
     </View>
   );

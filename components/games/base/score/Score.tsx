@@ -10,24 +10,24 @@ import Animated, {
 } from "react-native-reanimated";
 import {defaultColors} from "@/constants/Colors";
 import useHLGameScales from "@/components/games/higherLowerGame/useHLGameScales";
-import {useRouter} from "expo-router";
+// import {useRouter} from "expo-router";
 
 const heartFull = require("@/assets/images/indicators/hp.png") as any;
 const heartEmpty = require("@/assets/images/indicators/hpEmpty.png") as any;
 
 const Score = ({ maxHp }: { maxHp: number }) => {
-  const router = useRouter();
+  // const router = useRouter();
   const totalScore = useGameStore(state => state.totalScore);
   const correctScore = useGameStore(state => state.correctScore);
   const scales = useHLGameScales();
 
   const hp = Math.max(0, maxHp - (totalScore - correctScore));
 
-  useEffect(() => {
-    if (hp <= 0) {
-      router.replace("/results"); // replace, чтобы нельзя было вернуться "назад" в игру
-    }
-  }, [hp]);
+  // useEffect(() => {
+  //   if (hp <= 0) {
+  //     router.replace("/results");
+  //   }
+  // }, [hp]);
 
   const scoreScale = useSharedValue(1);
   useEffect(() => {
@@ -37,7 +37,7 @@ const Score = ({ maxHp }: { maxHp: number }) => {
 
   const animatedScoreStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scoreScale.value }],
-  }));
+  }) as any);
 
   return (
     <View style={{
@@ -47,7 +47,8 @@ const Score = ({ maxHp }: { maxHp: number }) => {
       flex: 1,
       flexDirection: "row",
       justifyContent: "space-between",
-      alignItems: "center"
+      alignItems: "center",
+      zIndex: 1,
     }}>
       <Animated.Text style={[{
         fontWeight: "bold",
@@ -91,7 +92,7 @@ const Score = ({ maxHp }: { maxHp: number }) => {
                 { scale: scale.value },
                 { translateX: translateX.value },
               ],
-            }));
+            }) as any);
 
             return (
               <Animated.Image
