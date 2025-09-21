@@ -52,7 +52,7 @@ const Countdown = ({ scales, registerNumberController }: {
   >
     {number !== null && <Animated.Text style={[{
       color: "#e6e6e6",
-      fontSize: scales.screen.height * .05,
+      fontSize: scales.screen.height * .1,
       fontWeight: "bold"
     }, animatedStyle]}>
       {number}...

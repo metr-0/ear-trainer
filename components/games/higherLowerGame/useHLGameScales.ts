@@ -20,7 +20,7 @@ const useHLGameScales = () => {
 
   const indicator = {
     width: screenWidth,
-    height: screenHeight * .05
+    height: screenHeight * .07
   }
 
   const player = {

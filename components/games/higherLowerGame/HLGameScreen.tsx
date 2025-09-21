@@ -17,10 +17,13 @@ import {useRouter} from "expo-router";
 import useGameStore from "@/store/useGameStore";
 import {defaultColors} from "@/constants/Colors";
 import useCountdownController from "@/components/games/base/countdown/useCountdownController";
+import Score from "@/components/games/base/score/Score";
 
 export default function HLGameScreen() {
   const bpm = 30;
   const router = useRouter();
+
+  const gameStore = useGameStore();
 
   const state = useRef(new HLGameState()).current;
   const settings = useRef(new HLGameSettings(bpm, GameMode.INFINITE, 0)).current;
@@ -62,7 +65,11 @@ export default function HLGameScreen() {
         const answer = player.getLane();
         player.moveTo(0);
 
-        const correct = answer !== 0;
+        const correct = answer === 0;
+
+        gameStore.incTotalScore();
+        if (correct) gameStore.incCorrectScore();
+
         indicator.show(correct);
         player.setColor(correct ? PlayerColor.CORRECT : PlayerColor.MISTAKE);
       } else if (phase === GamePhase.PREP) {
@@ -99,6 +106,7 @@ export default function HLGameScreen() {
           position: "absolute",
           top: scales.screen.height * .04,
           right: scales.screen.height * .04,
+          zIndex: 1
         }}
         onPress={() => {
           setPaused(true);
@@ -113,11 +121,12 @@ export default function HLGameScreen() {
         />
       </Pressable>
 
+      <Score maxHp={10} />
+
       <View style={{
         display: "flex", flexDirection: "column", alignItems: "center",
         position: "absolute", width: scales.screen.width,
-        bottom: (scales.screen.height - 3 * scales.lane.height - 2 * scales.lane.dividerHeight) / 2
-          - scales.countdownBar.height - 2 * scales.lane.dividerHeight
+        bottom: scales.screen.height * .04
       }}>
         <ProgressBar scales={scales} duration={60 / 2 / bpm * 1000} loop={loop} />
       </View>
@@ -125,8 +134,7 @@ export default function HLGameScreen() {
       <View style={{
         display: "flex", flexDirection: "column", alignItems: "center",
         position: "absolute", width: scales.screen.width,
-        bottom: (scales.screen.height - 3 * scales.lane.height - 2 * scales.lane.dividerHeight) / 2
-          - scales.countdownBar.height - 2 * scales.lane.dividerHeight
+        bottom: scales.screen.height * .04
       }}>
         <countdown.View />
       </View>
@@ -134,8 +142,7 @@ export default function HLGameScreen() {
       <View style={{
         display: "flex", flexDirection: "column", alignItems: "center",
         position: "absolute", width: scales.screen.width,
-        bottom: (scales.screen.height - 3 * scales.lane.height - 2 * scales.lane.dividerHeight) / 2
-          - scales.countdownBar.height - 2 * scales.lane.dividerHeight
+        bottom: scales.screen.height * .02
       }}>
         <indicator.View />
       </View>
