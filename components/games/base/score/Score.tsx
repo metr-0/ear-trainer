@@ -17,7 +17,8 @@ const heartEmpty = require("@/assets/images/indicators/hpEmpty.png") as any;
 
 const Score = ({ maxHp }: { maxHp: number }) => {
   const router = useRouter();
-  const { totalScore, correctScore } = useGameStore();
+  const totalScore = useGameStore(state => state.totalScore);
+  const correctScore = useGameStore(state => state.correctScore);
   const scales = useHLGameScales();
 
   const hp = Math.max(0, maxHp - (totalScore - correctScore));

@@ -6,7 +6,7 @@ import {defaultColors} from "@/constants/Colors";
 
 export default function PauseScreen() {
   const router = useRouter();
-  const { setPaused } = useGameStore();
+  const setPaused = useGameStore(state => state.setPaused);
   const scales = useHLGameScales();
 
   return (

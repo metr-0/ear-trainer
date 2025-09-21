@@ -8,7 +8,7 @@ export default function ResultsScreen() {
   const router = useRouter();
   const scales = useHLGameScales();
 
-  const {correctScore} = useGameStore();
+  const correctScore = useGameStore(state => state.correctScore);
 
   return (
     <View style={styles.container}>

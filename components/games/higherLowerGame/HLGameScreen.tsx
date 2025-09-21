@@ -23,8 +23,6 @@ export default function HLGameScreen() {
   const bpm = 30;
   const router = useRouter();
 
-  const gameStore = useGameStore();
-
   const state = useRef(new HLGameState()).current;
   const settings = useRef(new HLGameSettings(bpm, GameMode.INFINITE, 0)).current;
   const scales = useHLGameScales();
@@ -37,7 +35,8 @@ export default function HLGameScreen() {
 
   const inputHandler = useRef(new InputHandler()).current;
 
-  const { paused, setPaused } = useGameStore();
+  const paused = useGameStore(state => state.paused);
+  const setPaused = useGameStore(state => state.setPaused);
 
   useEffect(() => {
     inputHandler.onInput((event) => {
@@ -67,6 +66,7 @@ export default function HLGameScreen() {
 
         const correct = answer === 0;
 
+        const gameStore = useGameStore.getState();
         gameStore.incTotalScore();
         if (correct) gameStore.incCorrectScore();
 
@@ -106,7 +106,7 @@ export default function HLGameScreen() {
           position: "absolute",
           top: scales.screen.height * .04,
           right: scales.screen.height * .04,
-          zIndex: 1
+          zIndex: 2
         }}
         onPress={() => {
           setPaused(true);
@@ -142,7 +142,7 @@ export default function HLGameScreen() {
       <View style={{
         display: "flex", flexDirection: "column", alignItems: "center",
         position: "absolute", width: scales.screen.width,
-        bottom: scales.screen.height * .02
+        bottom: scales.screen.height * .12
       }}>
         <indicator.View />
       </View>

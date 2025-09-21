@@ -1,38 +1,27 @@
-import {Animated} from "react-native";
-import {useEffect, useRef, useState} from "react";
+import {useRef} from "react";
 import Indicator from "@/components/games/base/indicator/Indicator";
-import useGameStore from "@/store/useGameStore";
+import IndicatorVisibleController from "@/components/games/base/indicator/IndicatorVisibleController";
 
 const useIndicatorController = (scales: any) => {
-  const duration = 100;
-  const slideAnim = useRef(new Animated.Value(0)).current;
-  const [correct, setCorrect] = useState(false);
+  const indicatorShowControllerRef = useRef<null | IndicatorVisibleController>(null);
+  const correctRef = useRef(false);
 
-  const {paused} = useGameStore();
-
-  useEffect(() => {
-    if (paused) slideAnim.setValue(0);
-  }, [paused]);
+  const View = () => <Indicator
+    scales={scales}
+    registerVisibleController={(fn) => (indicatorShowControllerRef.current = fn)}
+  />;
 
   const show = (newCorrect: boolean) => {
-    setCorrect(newCorrect);
+    correctRef.current = newCorrect;
 
-    Animated.timing(slideAnim, {
-      toValue: 1,
-      duration,
-      useNativeDriver: true,
-    }).start();
+    if (!indicatorShowControllerRef.current) return;
+    indicatorShowControllerRef.current?.(true, newCorrect);
   };
 
   const hide = () => {
-    Animated.timing(slideAnim, {
-      toValue: 0,
-      duration,
-      useNativeDriver: true,
-    }).start();
+    if (!indicatorShowControllerRef.current) return;
+    indicatorShowControllerRef.current?.(false, correctRef.current);
   }
-
-  const View = () => <Indicator slideAnim={slideAnim} correct={correct} scales={scales} />;
 
   return { View, show, hide };
 }
