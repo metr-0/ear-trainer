@@ -1,8 +1,8 @@
 import GamePhase from "@/components/games/base/loop/GamePhase";
 
 export default class GameState {
-  phase: GamePhase;
+  phase: GamePhase = GamePhase.PREP;
 
-  totalScore: number;
-  correctScore: number;
+  totalScore: number = 0;
+  correctScore: number = 0;
 }

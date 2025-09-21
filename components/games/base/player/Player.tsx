@@ -19,7 +19,7 @@ const ForwardedPlayerNoteSvg = forwardRef((props: any, ref) => (
   <PlayerNoteSvg {...props} ref={ref} />
 ));
 
-const AnimatedPlayerNote = Animated.createAnimatedComponent(ForwardedPlayerNoteSvg as any);
+const AnimatedPlayerNote = Animated.createAnimatedComponent(ForwardedPlayerNoteSvg as any) as any;
 
 const images = {
   front: require("../../../../assets/images/player/playerNote.png"),

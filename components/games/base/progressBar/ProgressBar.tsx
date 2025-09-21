@@ -1,20 +1,20 @@
 import React, {useEffect, useRef} from "react";
 import { Animated, View } from "react-native";
-import CountdownEvent from "@/components/games/base/countdown/CountdownEvent";
-import CountdownTimer from "@/components/games/base/countdown/CountdownTimer";
+import ProgressBarEvent from "@/components/games/base/progressBar/ProgressBarEvent";
+import ProgressBarTimer from "@/components/games/base/progressBar/ProgressBarTimer";
 import GamePhase from "@/components/games/base/loop/GamePhase";
 import GameLoop from "@/components/games/base/loop/GameLoop";
 
-const CountdownBar = ({ duration, scales, loop }: {
+const ProgressBar = ({ duration, scales, loop }: {
   duration: number,
   scales: any,
   loop: GameLoop
 }) => {
 
-  const countdownAnim = useRef(new Animated.Value(0)).current;
+  const progressAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(scales.screen.height * .3)).current;
 
-  const timer = useRef(new CountdownTimer(duration, countdownAnim)).current;
+  const timer = useRef(new ProgressBarTimer(duration, progressAnim)).current;
 
   useEffect(() => {
     loop.onPhaseChange(phase => {
@@ -25,14 +25,14 @@ const CountdownBar = ({ duration, scales, loop }: {
   useEffect(() => {
     timer.onEvent(event => {
       switch (event) {
-        case CountdownEvent.STARTED:
+        case ProgressBarEvent.STARTED:
           Animated.timing(slideAnim, {
             toValue: 0,
             duration: 100,
             useNativeDriver: true,
           }).start();
           break;
-        case CountdownEvent.COMPLETED:
+        case ProgressBarEvent.COMPLETED:
           Animated.timing(slideAnim, {
             toValue: scales.screen.height * .3,
             duration: 100,
@@ -43,7 +43,7 @@ const CountdownBar = ({ duration, scales, loop }: {
     });
   }, [timer, scales.screen.height])
 
-  const translateX = countdownAnim.interpolate({
+  const translateX = progressAnim.interpolate({
     inputRange: [0, 1],
     outputRange: [0, -scales.countdownBar.width],
   });
@@ -79,4 +79,4 @@ const CountdownBar = ({ duration, scales, loop }: {
   );
 };
 
-export default CountdownBar;
+export default ProgressBar;

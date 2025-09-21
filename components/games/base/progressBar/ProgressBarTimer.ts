@@ -1,12 +1,12 @@
 import {Animated, Easing} from "react-native";
-import CountdownEventListener from "@/components/games/base/countdown/CountdownEventListener";
-import CountdownEvent from "@/components/games/base/countdown/CountdownEvent";
+import ProgressBarEventListener from "@/components/games/base/progressBar/ProgressBarEventListener";
+import ProgressBarEvent from "@/components/games/base/progressBar/ProgressBarEvent";
 
-export default class CountdownTimer {
+export default class ProgressBarTimer {
   private readonly anim: Animated.Value;
   private readonly duration: number;
 
-  private readonly listeners: CountdownEventListener[] = [];
+  private readonly listeners: ProgressBarEventListener[] = [];
 
   private animation?: Animated.CompositeAnimation;
 
@@ -30,16 +30,16 @@ export default class CountdownTimer {
 
     this.animation.start(({ finished }) => {
       if (finished) {
-        this.emit(CountdownEvent.COMPLETED);
+        this.emit(ProgressBarEvent.COMPLETED);
       }
     });
 
-    this.emit(CountdownEvent.STARTED);
+    this.emit(ProgressBarEvent.STARTED);
   }
 
-  public onEvent = (listener: CountdownEventListener) => {
+  public onEvent = (listener: ProgressBarEventListener) => {
     this.listeners.push(listener);
   }
 
-  private emit = (event: CountdownEvent) => this.listeners.forEach(listener => listener(event));
+  private emit = (event: ProgressBarEvent) => this.listeners.forEach(listener => listener(event));
 }

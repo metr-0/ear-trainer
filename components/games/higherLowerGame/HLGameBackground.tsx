@@ -38,14 +38,21 @@ export const HLGameBackground = ({ laneImages, bpm }: { laneImages: any[], bpm: 
               style={{
                 width: scales.lane.width, height: scales.lane.height,
                 backgroundColor: "#e6e6e6"
-            }}
+              }}
             />
             <Image
               source={img}
               style={{
                 width: scales.lane.width, height: scales.lane.height,
                 backgroundColor: "#e6e6e6"
-            }}
+              }}
+            />
+            <Image
+              source={img}
+              style={{
+                width: scales.lane.width, height: scales.lane.height,
+                backgroundColor: "#e6e6e6"
+              }}
             />
           </Animated.View>
           {index < 2 && (
