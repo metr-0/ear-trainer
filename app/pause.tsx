@@ -1,13 +1,13 @@
 import {View, StyleSheet, Pressable, Image} from 'react-native';
 import {useRouter} from "expo-router";
 import useGameStore from "@/store/useGameStore";
-import useHLGameScales from "@/components/games/higherLowerGame/useHLGameScales";
-import {defaultColors} from "@/constants/Colors";
+import useScales from "@/components/useScales";
+import colors from "@/constants/Colors";
 
 export default function PauseScreen() {
   const router = useRouter();
   const setPaused = useGameStore(state => state.setPaused);
-  const scales = useHLGameScales();
+  const scales = useScales();
 
   return (
     <View style={styles.container}>
@@ -25,7 +25,7 @@ export default function PauseScreen() {
           source={require("../assets/images/icons/home.png")}
           style={{ width: scales.screen.height * .10, height: scales.screen.height * .10 }}
           resizeMode="contain"
-          tintColor={defaultColors.neutral}
+          tintColor={colors.white}
         />
       </Pressable>
       <Pressable
@@ -43,7 +43,7 @@ export default function PauseScreen() {
           source={require("../assets/images/icons/play.png")}
           style={{ width: scales.screen.height * .15, height: scales.screen.height * .15 }}
           resizeMode="contain"
-          tintColor={defaultColors.neutral}
+          tintColor={colors.white}
         />
       </Pressable>
     </View>
