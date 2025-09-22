@@ -1,35 +1,34 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import {View, Image, Pressable} from 'react-native';
 import {useRouter} from "expo-router";
+import useScales from "@/components/useScales";
+import colors from "@/constants/Colors";
 
-export default function SettingsScreen() {
+const SettingsScreen = () => {
   const router = useRouter();
+  const scales = useScales();
 
   return (
-    <View style={styles.container}>
-      <Text>settings</Text>
-
-      <TouchableOpacity
-        style={styles.backButton}
+    <View style={{
+      flex: 1,
+      backgroundColor: colors.black
+    }}>
+      <Pressable
+        style={{
+          position: "absolute",
+          top: scales.screen.height * .1,
+          left: scales.screen.height * .1,
+        }}
         onPress={() => router.back()}
       >
-        <Ionicons name="arrow-undo" size={24} color="white" />
-      </TouchableOpacity>
+        <Image
+          source={require("@/assets/images/icons/back.png")}
+          style={{ width: scales.screen.height * .07, height: scales.screen.height * .07 }}
+          resizeMode="contain"
+          tintColor={colors.white}
+        />
+      </Pressable>
     </View>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "gray",
-    flex: 1
-  },
-  backButton: {
-    position: 'absolute',
-    top: 50,
-    left: 50,
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    padding: 10,
-    borderRadius: 20,
-  }
-});
+export default SettingsScreen;

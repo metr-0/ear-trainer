@@ -1,80 +1,64 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import {View, Pressable, Image} from 'react-native';
 import {useRouter} from "expo-router";
+import colors from "@/constants/Colors";
+import useScales from "@/components/useScales";
 
-export default function PreparationScreen() {
+const PreparationScreen = () => {
   const router = useRouter();
+  const scales = useScales();
 
   return (
-    <View style={styles.container}>
-      <Text>preparation</Text>
-
-      <TouchableOpacity
-        style={styles.settingsButton}
-        onPress={() => router.push('/settings')}
+    <View style={{
+      flex: 1,
+      backgroundColor: colors.white
+    }}>
+      <Pressable
+        style={{
+          position: "absolute",
+          top: scales.screen.height * .1,
+          right: scales.screen.height * .1,
+        }}
+        onPress={() => router.push("/settings")}
       >
-        <Ionicons name="settings" size={24} color="white" />
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.playButton}
-        onPress={() => router.push('/game')}
-      >
-        <Ionicons name="play" size={24} color="white" />
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.homeButton}
-        onPress={() => router.dismissTo('/home')}
-      >
-        <Ionicons name="home" size={24} color="white" />
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.backButton}
+        <Image
+          source={require("@/assets/images/icons/settings.png")}
+          style={{ width: scales.screen.height * .07, height: scales.screen.height * .07 }}
+          resizeMode="contain"
+          tintColor={colors.black}
+        />
+      </Pressable>
+      <Pressable
+        style={{
+          position: "absolute",
+          top: scales.screen.height * .1,
+          left: scales.screen.height * .1,
+        }}
         onPress={() => router.back()}
       >
-        <Ionicons name="arrow-undo" size={24} color="white" />
-      </TouchableOpacity>
+        <Image
+          source={require("@/assets/images/icons/back.png")}
+          style={{ width: scales.screen.height * .07, height: scales.screen.height * .07 }}
+          resizeMode="contain"
+          tintColor={colors.black}
+        />
+      </Pressable>
+      <Pressable
+        style={{
+          position: "absolute",
+          bottom: scales.screen.height * .1,
+          right: scales.screen.height * .1,
+        }}
+        onPress={() => router.push("/game")}
+      >
+        <Image
+          source={require("@/assets/images/icons/play.png")}
+          style={{ width: scales.screen.height * .15, height: scales.screen.height * .15 }}
+          resizeMode="contain"
+          tintColor={colors.black}
+        />
+      </Pressable>
     </View>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "gray",
-    flex: 1
-  },
-  backButton: {
-    position: 'absolute',
-    top: 100,
-    left: 100,
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    padding: 10,
-    borderRadius: 20,
-  },
-  settingsButton: {
-    position: 'absolute',
-    top: 100,
-    right: 100,
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    padding: 10,
-    borderRadius: 20,
-  },
-  playButton: {
-    position: 'absolute',
-    bottom: 100,
-    right: 100,
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    padding: 10,
-    borderRadius: 20,
-  },
-  homeButton: {
-    position: 'absolute',
-    top: 200,
-    left: 100,
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    padding: 10,
-    borderRadius: 20,
-  }
-});
+export default PreparationScreen;

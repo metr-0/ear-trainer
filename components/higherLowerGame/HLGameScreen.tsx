@@ -43,7 +43,7 @@ export default function HLGameScreen() {
   const setPaused = useGameStore(state => state.setPaused);
 
   useEffect(() => {
-    inputHandler.onInput((event) => {
+    const unsubscribe = inputHandler.onInput((event) => {
       if (state.phase !== GamePhase.INPUT) return;
 
       switch (event) {
@@ -56,11 +56,14 @@ export default function HLGameScreen() {
       }
     });
 
-    return () => inputHandler.cleanup();
+    return () => {
+      unsubscribe();
+      inputHandler.cleanup();
+    }
   }, [inputHandler]);
 
   useEffect(() => {
-    loop.onPhaseChange(phase => {
+    const unsubscribe = loop.onPhaseChange(phase => {
       if (phase === GamePhase.INPUT) {
         progressBar.show(60 / 2 / bpm * 1000);
         indicator.hide();
@@ -85,6 +88,8 @@ export default function HLGameScreen() {
         countdown.startCountdown(60 / bpm * 1000, 3);
       }
     });
+
+    return () => {unsubscribe();}
   }, [loop]);
 
   useEffect(() => {

@@ -1,22 +1,25 @@
-import {View, StyleSheet, Pressable, Image, Text} from 'react-native';
+import {View, Pressable, Image, Text} from 'react-native';
 import {useRouter} from "expo-router";
 import useGameStore from "@/store/useGameStore";
 import useScales from "@/components/useScales";
 import colors from "@/constants/Colors";
 
-export default function ResultsScreen() {
+const ResultsScreen = () => {
   const router = useRouter();
   const scales = useScales();
 
   const correctScore = useGameStore(state => state.correctScore);
 
   return (
-    <View style={styles.container}>
+    <View style={{
+      flex: 1,
+      backgroundColor: colors.black
+    }}>
       <Pressable
         style={{
           position: "absolute",
-          top: scales.screen.height / 2 - scales.screen.height * (.10 / 2),
-          left: scales.screen.width / 2 - scales.screen.height * (.10 * 2.5),
+          top: scales.screen.height / 2 - scales.screen.height * (.10 / 2 - .1),
+          left: scales.screen.width / 2 - scales.screen.height * (.10 / 2),
         }}
         onPress={() => {
           router.navigate("/home");
@@ -29,22 +32,17 @@ export default function ResultsScreen() {
           tintColor={colors.white}
         />
       </Pressable>
-      <Text>score: {correctScore}</Text>
+      <Text style={{
+        width: scales.screen.width,
+        textAlign: "center",
+        fontSize: scales.screen.height * .07,
+        color: colors.white,
+        fontWeight: "bold",
+        position: "absolute",
+        top: scales.screen.height * .35
+      }}>Score: {correctScore}</Text>
     </View>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#262626",
-    flex: 1
-  },
-  backButton: {
-    position: 'absolute',
-    top: 50,
-    left: 50,
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    padding: 10,
-    borderRadius: 20,
-  }
-});
+export default ResultsScreen;

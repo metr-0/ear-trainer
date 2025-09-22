@@ -1,85 +1,84 @@
-import {View, Text, TouchableOpacity, StyleSheet, ScrollView} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import {useLocalSearchParams, useRouter} from "expo-router";
+import {View, Text, Image, Pressable} from 'react-native';
+import {useRouter} from "expo-router";
+import colors from "@/constants/Colors";
+import useScales from "@/components/useScales";
 
-export default function GamesScreen() {
+const GamesScreen = () => {
   const router = useRouter();
-  const { section } = useLocalSearchParams();
+  const scales = useScales();
 
   const games = [
-    { id: 1, name: 'g1', color: '#FF5733' },
-    { id: 2, name: 'g2', color: '#33FF57' },
-    { id: 3, name: 'g3', color: '#3357FF' },
-    { id: 4, name: 'g4', color: '#F333FF' },
-    { id: 5, name: 'g5', color: '#FF33F3' },
+    { id: 1, name: 'Higher-Lower' },
+    // { id: 2, name: 'Higher-Lower' },
   ];
 
   return (
-    <View style={styles.container}>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContainer}
+    <View style={{
+      backgroundColor: colors.black,
+      flex: 1
+    }}>
+      <Pressable
+        style={{
+          position: "absolute",
+          top: scales.screen.height * .1,
+          right: scales.screen.height * .1,
+        }}
+        onPress={() => router.push("/settings")}
       >
-        {games.map((game) => (
-          <TouchableOpacity
-            key={game.id}
-            style={[styles.card, { backgroundColor: game.color }]}
-            onPress={() => router.push({
-              pathname: '/preparation',
-              params: { game: game.name }
-            })}
-          >
-            <Text style={styles.cardText}>{game.name}</Text>
-          </TouchableOpacity>
-        ))}
-        <Text>{section}</Text>
-      </ScrollView>
-
-      <TouchableOpacity
-        style={styles.backButton}
+        <Image
+          source={require("@/assets/images/icons/settings.png")}
+          style={{ width: scales.screen.height * .07, height: scales.screen.height * .07 }}
+          resizeMode="contain"
+          tintColor={colors.white}
+        />
+      </Pressable>
+      <Pressable
+        style={{
+          position: "absolute",
+          top: scales.screen.height * .1,
+          left: scales.screen.height * .1,
+        }}
         onPress={() => router.back()}
       >
-        <Ionicons name="arrow-undo" size={24} color="white" />
-      </TouchableOpacity>
+        <Image
+          source={require("@/assets/images/icons/back.png")}
+          style={{ width: scales.screen.height * .07, height: scales.screen.height * .07 }}
+          resizeMode="contain"
+          tintColor={colors.white}
+        />
+      </Pressable>
+
+      <View style={{
+        flex: 1,
+        position: "absolute",
+        top: scales.screen.height * .35,
+        flexDirection: "row",
+        marginLeft: scales.screen.height * .05
+      }}>
+        {games.map(game => (
+          <Pressable style={{
+            marginLeft: scales.screen.height * .05,
+            flex: 1,
+            flexDirection: "column",
+            alignItems: "center"
+          }} onPress={() => router.push({
+            pathname: '/preparation',
+            params: { game: game.name }
+          })}>
+            <View style={{
+              width: scales.screen.height * .2,
+              height: scales.screen.height * .3,
+              backgroundColor: colors.white
+            }} />
+            <Text style={{
+              color: colors.white,
+              fontSize: scales.screen.height * .03
+            }}>{game.name}</Text>
+          </Pressable>
+        ))}
+      </View>
     </View>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "gray",
-    flex: 1,
-    paddingTop: 50,
-  },
-  scrollContainer: {
-    paddingHorizontal: 20,
-    alignItems: 'center',
-  },
-  card: {
-    width: 150,
-    height: 200,
-    borderRadius: 10,
-    marginHorizontal: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  cardText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  backButton: {
-    position: 'absolute',
-    top: 50,
-    left: 20,
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    padding: 10,
-    borderRadius: 20,
-  }
-});
+export default GamesScreen;

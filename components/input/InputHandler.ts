@@ -4,11 +4,14 @@ import InputEvent from "@/components/input/InputEvent";
 
 export default class InputHandler {
   private readonly responder: PanResponderInstance;
-  private readonly listeners: InputEventListener[] = [];
+  private listeners: InputEventListener[] = [];
 
   private swipeLocked = false;
 
-  public onInput(listener: InputEventListener) { this.listeners.push(listener); }
+  public onInput(listener: InputEventListener) {
+    this.listeners.push(listener);
+    return () => this.listeners = this.listeners.filter(l => l !== listener);
+  }
   public emit(event: InputEvent) { this.listeners.forEach(listener => listener(event)); }
 
   constructor() {

@@ -1,49 +1,61 @@
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import {View, Image, Pressable, Text} from 'react-native';
 import {useRouter} from "expo-router";
+import useScales from "@/components/useScales";
+import colors from "@/constants/Colors";
 
-export default function HomeScreen() {
+const HomeScreen = () => {
   const router = useRouter();
+  const scales = useScales();
 
   return (
-    <View style={styles.container}>
-
-      <TouchableOpacity
-        style={styles.settingsButton}
-        onPress={() => router.push('/settings')}
+    <View style={{
+      flex: 1,
+      backgroundColor: colors.white
+    }}>
+      <Text style={{
+        position: "absolute",
+        top: scales.screen.height * .35,
+        width: scales.screen.width,
+        fontSize: scales.screen.height * .07,
+        color: colors.black,
+        fontWeight: "bold",
+        textAlign: "center"
+      }}>
+        Ear Trainer
+      </Text>
+      <Pressable
+        style={{
+          position: "absolute",
+          top: scales.screen.height / 2 - scales.screen.height * (.15 / 2) + scales.screen.height * .1,
+          left: scales.screen.width / 2 - scales.screen.height * (.15 / 2),
+        }}
+        onPress={() => router.push("/games")}
       >
-        <Ionicons name="settings" size={24} color="white" />
-      </TouchableOpacity>
+        <Image
+          source={require("@/assets/images/icons/play.png")}
+          style={{ width: scales.screen.height * .15, height: scales.screen.height * .15 }}
+          resizeMode="contain"
+          tintColor={colors.black}
+        />
+      </Pressable>
 
-      <TouchableOpacity
-        style={styles.playButton}
-        onPress={() => router.push('/sections')}
+      <Pressable
+        style={{
+          position: "absolute",
+          top: scales.screen.height * .1,
+          right: scales.screen.height * .1,
+        }}
+        onPress={() => router.push("/settings")}
       >
-        <Ionicons name="play" size={24} color="white" />
-      </TouchableOpacity>
+        <Image
+          source={require("@/assets/images/icons/settings.png")}
+          style={{ width: scales.screen.height * .07, height: scales.screen.height * .07 }}
+          resizeMode="contain"
+          tintColor={colors.black}
+        />
+      </Pressable>
     </View>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "salmon",
-    flex: 1
-  },
-  settingsButton: {
-    position: 'absolute',
-    top: 100,
-    right: 100,
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    padding: 10,
-    borderRadius: 20,
-  },
-  playButton: {
-    position: 'absolute',
-    bottom: 100,
-    right: 100,
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    padding: 10,
-    borderRadius: 20,
-  },
-});
+export default HomeScreen;

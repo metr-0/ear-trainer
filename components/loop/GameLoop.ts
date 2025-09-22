@@ -14,7 +14,7 @@ export default class GameLoop {
   private frameId: number | null = null;
   private lastTime: number = 0;
 
-  private readonly listeners: GamePhaseListener[] = [];
+  private listeners: GamePhaseListener[] = [];
 
   constructor(state: GameState, settings: GameSettings) {
     this.gameState = state;
@@ -26,6 +26,7 @@ export default class GameLoop {
 
   public onPhaseChange(listener: GamePhaseListener) {
     this.listeners.push(listener);
+    return () => this.listeners = this.listeners.filter(l => l !== listener);
   }
 
   public start() {
