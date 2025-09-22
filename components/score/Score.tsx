@@ -75,7 +75,11 @@ const Score = ({ maxHp }: { maxHp: number }) => {
             const translateX = useSharedValue(0);
 
             useEffect(() => {
-              if (!filled) {
+              if (filled) {
+                opacity.value = 1;
+                scale.value = 1;
+                translateX.value = 0;
+              } else {
                 opacity.value = withTiming(0.3, { duration: 400 });
                 scale.value = withTiming(0.8, { duration: 400 });
 

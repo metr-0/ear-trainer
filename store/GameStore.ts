@@ -1,6 +1,11 @@
+import GameSettings from "@/components/GameSettings";
+
 export default interface GameStore {
   paused: boolean;
   setPaused: (value: boolean) => void;
+
+  settings: GameSettings;
+  setSettings: (value: GameSettings) => void;
 
   totalScore: number;
   correctScore: number;
@@ -8,5 +13,5 @@ export default interface GameStore {
   incTotalScore: () => void;
   incCorrectScore: () => void;
 
-  resetScore: () => void;
+  reset: () => void;
 }

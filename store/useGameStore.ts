@@ -1,9 +1,14 @@
-import { create } from "zustand";
+import {create} from "zustand";
 import GameStore from "@/store/GameStore";
+import GameSettings from "@/components/GameSettings";
+import GameMode from "@/components/GameMode";
 
 const useGameStore = create<GameStore>((set) => ({
   paused: false,
   setPaused: (value) => set({ paused: value }),
+
+  settings: new GameSettings(15, GameMode.LIMITED, 10),
+  setSettings: (value) => set({ settings: value }),
 
   totalScore: 0,
   correctScore: 0,
@@ -14,7 +19,13 @@ const useGameStore = create<GameStore>((set) => ({
   incCorrectScore: () =>
     set((state) => ({ correctScore: state.correctScore + 1 })),
 
-  resetScore: () => set({ totalScore: 0, correctScore: 0 }),
+  reset: () =>
+    set({
+      paused: false,
+      bpm: 30,
+      totalScore: 0,
+      correctScore: 0,
+    }),
 }));
 
 export default useGameStore;

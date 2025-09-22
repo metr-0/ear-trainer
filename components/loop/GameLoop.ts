@@ -1,11 +1,10 @@
 import GamePhase from "@/components/loop/GamePhase";
 import GameState from "@/components/GameState";
-import GameSettings from "@/components/GameSettings";
 import GamePhaseListener from "@/components/loop/GamePhaseListener";
 
 export default class GameLoop {
   private readonly gameState: GameState;
-  private readonly settings: GameSettings;
+  private readonly bpm: number;
 
   private readonly phaseDuration: number;
   private currentPhaseTime: number = 0;
@@ -16,11 +15,11 @@ export default class GameLoop {
 
   private listeners: GamePhaseListener[] = [];
 
-  constructor(state: GameState, settings: GameSettings) {
+  constructor(state: GameState, bpm: number) {
     this.gameState = state;
-    this.settings = settings;
+    this.bpm = bpm;
 
-    this.phaseDuration = 60 / this.settings.bpm;
+    this.phaseDuration = 60 / this.bpm;
     this.gameState.phase = GamePhase.PREP;
   }
 

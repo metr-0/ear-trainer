@@ -3,8 +3,6 @@ import {Image, Pressable, View} from "react-native";
 import {useRouter} from "expo-router";
 
 import HLGameBackground from "@/components/higherLowerGame/HLGameBackground";
-import GameMode from "@/components/GameMode";
-import HLGameSettings from "@/components/higherLowerGame/HLGameSettings";
 import HLGameState from "@/components/higherLowerGame/HLGameState";
 import useScales from "@/components/useScales";
 import GameLoop from "@/components/loop/GameLoop";
@@ -22,14 +20,13 @@ import useObstacles from "@/components/obstacle/useObstacles";
 import useProgressBar from "@/components/progressBar/useProgressBar";
 
 export default function HLGameScreen() {
-  const bpm = 30;
+  const settings = useGameStore(state => state.settings);
   const router = useRouter();
 
   const state = useRef(new HLGameState()).current;
-  const settings = useRef(new HLGameSettings(bpm, GameMode.INFINITE, 0)).current;
   const scales = useScales();
 
-  const loop = useRef(new GameLoop(state, settings)).current;
+  const loopRef = useRef<null | GameLoop>(null);
 
   const player = usePlayer(scales);
   const indicator = useIndicator();
@@ -41,6 +38,12 @@ export default function HLGameScreen() {
 
   const paused = useGameStore(state => state.paused);
   const setPaused = useGameStore(state => state.setPaused);
+
+  useEffect(() => {
+    loopRef.current?.stop();
+    loopRef.current = new GameLoop(state, settings.bpm);
+    if (!paused) loopRef.current?.start();
+  }, [settings]);
 
   useEffect(() => {
     const unsubscribe = inputHandler.onInput((event) => {
@@ -63,9 +66,9 @@ export default function HLGameScreen() {
   }, [inputHandler]);
 
   useEffect(() => {
-    const unsubscribe = loop.onPhaseChange(phase => {
+    const unsubscribe = loopRef.current?.onPhaseChange(phase => {
       if (phase === GamePhase.INPUT) {
-        progressBar.show(60 / 2 / bpm * 1000);
+        progressBar.show(60 / 2 / settings.bpm * 1000);
         indicator.hide();
         player.setColor(PlayerColor.NEUTRAL);
       } else if (phase === GamePhase.CHECK) {
@@ -80,25 +83,25 @@ export default function HLGameScreen() {
 
         obstacles.show(correctLane);
         player.moveTo(correctLane);
-        setTimeout(() => player.moveTo(0), 60 / bpm / 4 * 1000);
+        setTimeout(() => player.moveTo(0), 60 / settings.bpm / 4 * 1000);
 
         indicator.show(correct);
         player.setColor(correct ? PlayerColor.CORRECT : PlayerColor.MISTAKE);
       } else if (phase === GamePhase.PREP) {
-        countdown.startCountdown(60 / bpm * 1000, 3);
+        countdown.startCountdown(60 / settings.bpm * 1000, 3);
       }
     });
 
-    return () => {unsubscribe();}
-  }, [loop]);
+    return () => {unsubscribe?.();}
+  }, [loopRef.current]);
 
   useEffect(() => {
     if (!paused) {
-      loop.start();
+      loopRef.current?.start();
     } else {
-      loop.stop();
+      loopRef.current?.stop();
     }
-    return () => loop.stop();
+    return () => loopRef.current?.stop();
   }, [paused]);
 
   return (
@@ -107,7 +110,7 @@ export default function HLGameScreen() {
       {...inputHandler.getResponder()}
     >
       <HLGameBackground
-        bpm={bpm}
+        bpm={settings.bpm}
       />
 
       <Pressable
