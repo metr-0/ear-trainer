@@ -22,7 +22,7 @@ const useScales = () => {
     sway: screen.height * .005,
     particle: {
       size: screen.height * (.03 + Math.random() * .01),
-      speed: screen.width * (.2 + Math.random() * .01)
+      speed: screen.width // * (.2 + Math.random() * .01)
     }
   }
 

@@ -3,6 +3,7 @@ import {useLocalSearchParams, useRouter} from "expo-router";
 import colors from "@/constants/Colors";
 import useScales from "@/components/useScales";
 import {useState} from "react";
+import * as Tone from 'tone';
 
 const PreparationScreen = () => {
   const {game} = useLocalSearchParams<{ game?: string }>();
@@ -12,6 +13,17 @@ const PreparationScreen = () => {
 
   const [bpm, setBpm] = useState<number>(15);
   const bpmOptions = [15, 30, 45, 60, 75, 90];
+
+  const [audioStarted, setAudioStarted] = useState(false);
+
+  const startGame = async () => {
+    if (!audioStarted) {
+      await Tone.start();
+      setAudioStarted(true);
+    }
+
+    router.push({ pathname: "/game", params: { game, bpm } });
+  };
 
   return (
     <View style={{
@@ -57,7 +69,7 @@ const PreparationScreen = () => {
           bottom: scales.screen.height * .1,
           right: scales.screen.height * .1,
         }}
-        onPress={() => router.push({ pathname: "/game", params: { game, bpm } })}
+        onPress={startGame}
       >
         <Image
           source={require("@/assets/images/icons/play.png")}

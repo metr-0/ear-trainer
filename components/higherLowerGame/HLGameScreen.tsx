@@ -18,8 +18,15 @@ import useCountdown from "@/components/countdown/useCountdown";
 import Score from "@/components/score/Score";
 import useObstacles from "@/components/obstacle/useObstacles";
 import useProgressBar from "@/components/progressBar/useProgressBar";
+import useMelodyGenerator from "@/components/useMelodyGenerator";
+import useSynth from "@/components/useSynth";
 
 export default function HLGameScreen() {
+  const {ready, getLast2Notes, generateNext, reset} = useMelodyGenerator(
+    "https://metr-0.github.io/melody-gen/model/model.json"
+  );
+  const {playNote} = useSynth();
+
   const settings = useGameStore(state => state.settings);
   const router = useRouter();
 
@@ -42,7 +49,7 @@ export default function HLGameScreen() {
   useEffect(() => {
     loopRef.current?.stop();
     loopRef.current = new GameLoop(state, settings.bpm);
-    if (!paused) loopRef.current?.start();
+    if (!paused && ready) loopRef.current?.start();
   }, [settings]);
 
   useEffect(() => {
@@ -68,13 +75,17 @@ export default function HLGameScreen() {
   useEffect(() => {
     const unsubscribe = loopRef.current?.onPhaseChange(phase => {
       if (phase === GamePhase.INPUT) {
+        const nextNote = generateNext();
+        if (nextNote !== null) playNote(nextNote);
+
         progressBar.show(60 / 2 / settings.bpm * 1000);
         indicator.hide();
         player.setColor(PlayerColor.NEUTRAL);
       } else if (phase === GamePhase.CHECK) {
+        const [n1, n2] = getLast2Notes();
         const answer = player.getLane();
 
-        const correctLane = Math.floor(Math.random() * 3) - 1;
+        const correctLane = (n1 === n2) ? 0 : ((n1 > n2) ? 1 : -1);
         const correct = answer === correctLane;
 
         const gameStore = useGameStore.getState();
@@ -88,21 +99,25 @@ export default function HLGameScreen() {
         indicator.show(correct);
         player.setColor(correct ? PlayerColor.CORRECT : PlayerColor.MISTAKE);
       } else if (phase === GamePhase.PREP) {
+        const note = Math.round(Math.random() * 30) + 40;
+        reset([note]);
+        playNote(note);
+
         countdown.startCountdown(60 / settings.bpm * 1000, 3);
       }
     });
 
     return () => {unsubscribe?.();}
-  }, [loopRef.current]);
+  }, [loopRef.current, reset, generateNext]);
 
   useEffect(() => {
-    if (!paused) {
+    if (!paused && ready) {
       loopRef.current?.start();
     } else {
       loopRef.current?.stop();
     }
     return () => loopRef.current?.stop();
-  }, [paused]);
+  }, [paused, ready]);
 
   return (
     <View
