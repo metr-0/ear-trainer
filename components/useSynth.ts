@@ -1,5 +1,5 @@
 import {useEffect, useRef} from "react";
-import * as Tone from "tone";
+const Tone = require('tone/build/Tone.js');
 
 function generateNoteMap(): Record<number, string> {
   const notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];

@@ -70,16 +70,18 @@ const Indicator = ({ registerVisibleController }: {
             alignItems: "center",
           }}
         >
-          {Array.from({length: imagesCount},() =>
-            <Image
-              source={indicators.correct}
-              style={{
-                height: imageSize,
-                width: imageSize,
-                margin: imageSize / 4,
-                tintColor: colors.green
-              }}
-            />
+          {Array.from({length: imagesCount},(idx) =>
+            <React.Fragment key={idx}>
+              <Image
+                source={indicators.correct}
+                style={{
+                  height: imageSize,
+                  width: imageSize,
+                  margin: imageSize / 4,
+                  tintColor: colors.green
+                }}
+              />
+            </React.Fragment>
           )}
         </View>
       </Animated.View>
@@ -100,16 +102,18 @@ const Indicator = ({ registerVisibleController }: {
             alignItems: "center"
           }}
         >
-          {Array.from({length: imagesCount},() =>
-            <Image
-              source={indicators.mistake}
-              style={{
-                height: imageSize,
-                width: imageSize,
-                margin: imageSize / 4,
-                tintColor: colors.red
-              }}
-            />
+          {Array.from({length: imagesCount},(idx) =>
+            <React.Fragment key={idx}>
+              <Image
+                source={indicators.mistake}
+                style={{
+                  height: imageSize,
+                  width: imageSize,
+                  margin: imageSize / 4,
+                  tintColor: colors.red
+                }}
+              />
+            </React.Fragment>
           )}
         </View>
       </Animated.View>

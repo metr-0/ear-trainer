@@ -3,7 +3,7 @@ import {useLocalSearchParams, useRouter} from "expo-router";
 import colors from "@/constants/Colors";
 import useScales from "@/components/useScales";
 import {useState} from "react";
-import * as Tone from 'tone';
+const Tone = require('tone/build/Tone.js');
 
 const PreparationScreen = () => {
   const {game} = useLocalSearchParams<{ game?: string }>();

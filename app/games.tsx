@@ -1,3 +1,4 @@
+import React from 'react';
 import {View, Text, Image, Pressable} from 'react-native';
 import {useRouter} from "expo-router";
 import colors from "@/constants/Colors";
@@ -8,8 +9,8 @@ const GamesScreen = () => {
   const scales = useScales();
 
   const games = [
-    { id: 1, name: 'Higher-Lower' },
-    // { id: 2, name: 'Higher-Lower' },
+    { id: 1, name: 'Higher-Lower', cover: require("@/assets/images/covers/hl-game-cover.png") },
+    { id: 2, name: 'Repeat-Melody', cover: require("@/assets/images/covers/rm-game-cover.png") },
   ];
 
   return (
@@ -56,25 +57,26 @@ const GamesScreen = () => {
         marginLeft: scales.screen.height * .05
       }}>
         {games.map(game => (
-          <Pressable style={{
-            marginLeft: scales.screen.height * .05,
-            flex: 1,
-            flexDirection: "column",
-            alignItems: "center"
-          }} onPress={() => router.push({
-            pathname: '/preparation',
-            params: { game: game.name }
-          })}>
-            <View style={{
-              width: scales.screen.height * .2,
-              height: scales.screen.height * .3,
-              backgroundColor: colors.white
-            }} />
-            <Text style={{
-              color: colors.white,
-              fontSize: scales.screen.height * .03
-            }}>{game.name}</Text>
-          </Pressable>
+          <React.Fragment key={game.id}>
+            <Pressable style={{
+              marginLeft: scales.screen.height * .05,
+              flex: 1,
+              flexDirection: "column",
+              alignItems: "center"
+            }} onPress={() => router.push({
+              pathname: '/preparation',
+              params: { game: game.name }
+            })}>
+              <Image source={game.cover} style={{
+                height: Math.min(scales.screen.height, scales.screen.width) * .3,
+                width: Math.min(scales.screen.height, scales.screen.width) * .225,
+              }} />
+              <Text style={{
+                color: colors.white,
+                fontSize: Math.min(scales.screen.height, scales.screen.width) * .03
+              }}>{game.name}</Text>
+            </Pressable>
+          </React.Fragment>
         ))}
       </View>
     </View>

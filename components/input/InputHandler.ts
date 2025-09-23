@@ -1,4 +1,4 @@
-import {PanResponder, PanResponderInstance} from "react-native";
+import {PanResponder, PanResponderInstance, Platform} from "react-native";
 import InputEventListener from "@/components/input/InputEventListener";
 import InputEvent from "@/components/input/InputEvent";
 
@@ -41,8 +41,10 @@ export default class InputHandler {
       },
     });
 
-    if (typeof window !== "undefined") {
-      window.addEventListener("keydown", this.handleKeyDown);
+    if (Platform.OS === 'web') {
+      if (typeof window !== "undefined") {
+        window.addEventListener("keydown", this.handleKeyDown);
+      }
     }
   }
 
@@ -56,8 +58,10 @@ export default class InputHandler {
   }
 
   cleanup() {
-    if (typeof window !== "undefined") {
-      window.removeEventListener("keydown", this.handleKeyDown);
+    if (Platform.OS === 'web') {
+      if (typeof window !== "undefined") {
+        window.removeEventListener("keydown", this.handleKeyDown);
+      }
     }
   }
 }
