@@ -11,13 +11,13 @@ import Animated, {
 import useGameStore from "@/store/useGameStore";
 import colors from "@/constants/Colors";
 import useScales from "@/components/useScales";
-// import {useRouter} from "expo-router";
+import {useRouter} from "expo-router";
 
 const heartFull = require("@/assets/images/indicators/hp.png") as any;
 const heartEmpty = require("@/assets/images/indicators/hpEmpty.png") as any;
 
 const Score = ({ maxHp }: { maxHp: number }) => {
-  // const router = useRouter();
+  const router = useRouter();
   const scales = useScales().score;
 
   const totalScore = useGameStore(state => state.totalScore);
@@ -25,11 +25,11 @@ const Score = ({ maxHp }: { maxHp: number }) => {
 
   const hp = Math.max(0, maxHp - (totalScore - correctScore));
 
-  // useEffect(() => {
-  //   if (hp <= 0) {
-  //     router.replace("/results");
-  //   }
-  // }, [hp]);
+  useEffect(() => {
+    if (hp <= 0) {
+      router.replace("/results");
+    }
+  }, [hp]);
 
   const scoreScale = useSharedValue(1);
   useEffect(() => {

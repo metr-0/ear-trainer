@@ -3,15 +3,18 @@ import {useLocalSearchParams, useRouter} from "expo-router";
 import colors from "@/constants/Colors";
 import useScales from "@/components/useScales";
 import {useState} from "react";
+import useGameStore from "@/store/useGameStore";
 const Tone = require('tone/build/Tone.js');
 
 const PreparationScreen = () => {
   const {game} = useLocalSearchParams<{ game?: string }>();
 
+  const reset = useGameStore(state => state.reset);
+
   const router = useRouter();
   const scales = useScales();
 
-  const [bpm, setBpm] = useState<number>(15);
+  const [bpm, setBpm] = useState<number>(30);
   const bpmOptions = [15, 30, 45, 60, 75, 90];
 
   const [audioStarted, setAudioStarted] = useState(false);
@@ -22,6 +25,7 @@ const PreparationScreen = () => {
       setAudioStarted(true);
     }
 
+    reset();
     router.push({ pathname: "/game", params: { game, bpm } });
   };
 

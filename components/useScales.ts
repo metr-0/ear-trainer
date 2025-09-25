@@ -66,10 +66,29 @@ const useScales = () => {
     imgSize: Math.min(screen.height * .08, screen.width * .06)
   };
 
+  const counter = {
+    slide: screen.height * .3,
+    size: Math.min(screen.height * .08, screen.width * .06)
+  }
+
+  const pianoK = Math.min(screen.height * .5, screen.width * .3);
+  const piano = {
+    white: {
+      height: Math.round(pianoK),
+      width: Math.round(pianoK / 3) - 2 * Math.round(pianoK * .015),
+      margin: Math.round(pianoK * .015)
+    },
+    black: {
+      height: Math.round(pianoK * .667),
+      width: Math.round(pianoK * .2),
+      border: Math.round(pianoK * .015)
+    }
+  }
+
   return {
     screen, lane, countdown,
     countdownBar, player, indicator,
-    obstacles, score
+    obstacles, score, piano, counter
   };
 };
 

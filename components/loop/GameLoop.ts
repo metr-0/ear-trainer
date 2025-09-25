@@ -1,8 +1,10 @@
 import GamePhase from "@/components/loop/GamePhase";
 import GameState from "@/components/GameState";
 import GamePhaseListener from "@/components/loop/GamePhaseListener";
+import GameType from "@/components/GameType";
 
 export default class GameLoop {
+  private readonly gameType: GameType;
   private readonly gameState: GameState;
   private readonly bpm: number;
 
@@ -15,7 +17,8 @@ export default class GameLoop {
 
   private listeners: GamePhaseListener[] = [];
 
-  constructor(state: GameState, bpm: number) {
+  constructor(gameType: GameType, state: GameState, bpm: number) {
+    this.gameType = gameType;
     this.gameState = state;
     this.bpm = bpm;
 
@@ -63,19 +66,26 @@ export default class GameLoop {
     switch (this.gameState.phase) {
       case GamePhase.PREP:
         if (this.currentPhaseTime >= this.phaseDuration) {
-          this.setPhase(GamePhase.INPUT);
+          if (this.gameType === GameType.REPEAT_MELODY) this.setPhase(GamePhase.OUTPUT);
+          else this.setPhase(GamePhase.INPUT);
         }
         break;
 
       case GamePhase.INPUT:
+        if (this.gameType === GameType.REPEAT_MELODY) break;
+
         if (this.currentPhaseTime >= this.phaseDuration / 2) {
           this.setPhase(GamePhase.CHECK);
         }
         break;
 
+      case GamePhase.OUTPUT:
+        break;
+
       case GamePhase.CHECK:
         if (this.currentPhaseTime >= this.phaseDuration / 2) {
-          this.setPhase(GamePhase.INPUT);
+          if (this.gameType === GameType.REPEAT_MELODY) this.setPhase(GamePhase.OUTPUT);
+          else this.setPhase(GamePhase.INPUT);
         }
         break;
     }
@@ -85,6 +95,17 @@ export default class GameLoop {
     this.gameState.phase = phase;
     this.currentPhaseTime = 0;
     this.emitPhase();
+  }
+
+  public forceNextPhase() {
+    switch (this.gameState.phase) {
+      case GamePhase.OUTPUT:
+        this.setPhase(GamePhase.INPUT);
+        break;
+      case GamePhase.INPUT:
+        this.setPhase(GamePhase.CHECK);
+        break;
+    }
   }
 
   private emitPhase() {

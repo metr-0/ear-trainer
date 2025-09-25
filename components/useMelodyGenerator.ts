@@ -22,6 +22,7 @@ const useMelodyGenerator = (modelUrl: string) => {
     const values = probs.dataSync();
 
     const cumSum: number[] = [];
+    // @ts-ignore
     values.reduce((acc, v, i) => {
       cumSum[i] = acc + v;
       return cumSum[i];
@@ -32,7 +33,7 @@ const useMelodyGenerator = (modelUrl: string) => {
     return idx === -1 ? values.length - 1 : idx;
   }, []);
 
-  const generateNext = useCallback(() => {
+  const generateNext = useCallback((range?: [number, number]) => {
     if (!modelRef.current || sequenceRef.current.length === 0) return null;
 
     let nextNote: number | null = null;
@@ -45,13 +46,24 @@ const useMelodyGenerator = (modelUrl: string) => {
 
       const input = tf.tensor2d([padded], [1, padded.length], "int32");
 
-      const output = modelRef.current!.execute({ "input:0": input }, "Identity:0") as tf.Tensor;
+      const output = modelRef.current!.execute(
+        { "input:0": input },
+        "Identity:0"
+      ) as tf.Tensor;
 
       const [, time, vocab] = output.shape;
-      const logits = output
+      let logits = output
         .squeeze()
         .slice([time - 1, 0], [1, vocab])
         .squeeze() as tf.Tensor1D;
+
+      if (range) {
+        const [low, high] = range;
+        const mask = tf.tensor1d(
+          Array.from({ length: vocab }, (_, i) => (i >= low && i <= high ? 0 : -Infinity))
+        );
+        logits = tf.add(logits, mask);
+      }
 
       nextNote = sampleWithTemperature(logits, TEMPERATURE);
 

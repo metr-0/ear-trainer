@@ -4,13 +4,12 @@ import PlayerColor from "@/components/player/PlayerColor";
 import PlayerLaneController from "@/components/player/PlayerLaneController";
 import PlayerColorController from "@/components/player/PlayerColorController";
 
-const usePlayer = (scales: any) => {
+const usePlayer = () => {
   const laneControllerRef = useRef<null | PlayerLaneController>(null);
   const colorControllerRef = useRef<null | PlayerColorController>(null);
   const getLaneRef = useRef<null | (() => number)>(null);
 
   const View = () => <Player
-    scales={scales}
     registerLaneController={(fn) => (laneControllerRef.current = fn)}
     registerColorController={(fn) => (colorControllerRef.current = fn)}
     registerGetLane={(fn) => (getLaneRef.current = fn)}

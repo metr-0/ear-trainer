@@ -1,5 +1,6 @@
 enum GamePhase {
   PREP,
+  OUTPUT,
   INPUT,
   CHECK
 }

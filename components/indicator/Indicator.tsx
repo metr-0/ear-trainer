@@ -70,7 +70,7 @@ const Indicator = ({ registerVisibleController }: {
             alignItems: "center",
           }}
         >
-          {Array.from({length: imagesCount},(idx) =>
+          {Array.from({length: imagesCount},(_, idx) =>
             <React.Fragment key={idx}>
               <Image
                 source={indicators.correct}
@@ -102,7 +102,7 @@ const Indicator = ({ registerVisibleController }: {
             alignItems: "center"
           }}
         >
-          {Array.from({length: imagesCount},(idx) =>
+          {Array.from({length: imagesCount},(_, idx) =>
             <React.Fragment key={idx}>
               <Image
                 source={indicators.mistake}
