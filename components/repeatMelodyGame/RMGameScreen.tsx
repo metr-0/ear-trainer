@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef} from "react";
 import {Image, Pressable, View} from "react-native";
 import {useRouter} from "expo-router";
 import HLGameState from "@/components/higherLowerGame/HLGameState";
@@ -19,7 +19,7 @@ import usePiano from "@/components/piano/usePiano";
 export default function RMGameScreen() {
   const maxCount = 3;
 
-  const {ready, getLast2Notes, generateNext, reset} = useMelodyGenerator(
+  const {ready, generateNext, reset} = useMelodyGenerator(
     "https://metr-0.github.io/melody-gen/model/model.json"
   );
   const {playNote} = useSynth();

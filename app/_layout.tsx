@@ -3,6 +3,7 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
+import {View} from "react-native";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync().then();
@@ -18,5 +19,11 @@ export default function RootLayout() {
 
   if (!loaded) return null;
 
-  return <Stack screenOptions={{headerShown: false}} />;
+  return <View style={{
+    flex: 1,
+    overflow: "hidden",
+    touchAction: "none" as any
+  }}>
+    <Stack screenOptions={{ headerShown: false }} />
+  </View>;
 }
