@@ -1,8 +1,8 @@
 import React from 'react';
 import {View, Text, Image, Pressable} from 'react-native';
 import {useRouter} from "expo-router";
-import colors from "@/constants/Colors";
-import useScales from "@/components/useScales";
+import colors from "@/shared/constants/Colors";
+import useScales from "@/features/scales/useScales";
 
 const GamesScreen = () => {
   const router = useRouter();

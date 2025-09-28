@@ -1,7 +1,7 @@
 import {View, Image, Pressable, Text} from 'react-native';
 import {useRouter} from "expo-router";
-import useScales from "@/components/useScales";
-import colors from "@/constants/Colors";
+import useScales from "@/features/scales/useScales";
+import colors from "@/shared/constants/Colors";
 
 const HomeScreen = () => {
   const router = useRouter();

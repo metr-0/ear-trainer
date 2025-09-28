@@ -1,9 +1,9 @@
 import {View, Pressable, Image, Text} from 'react-native';
 import {useLocalSearchParams, useRouter} from "expo-router";
-import colors from "@/constants/Colors";
-import useScales from "@/components/useScales";
+import colors from "@/shared/constants/Colors";
+import useScales from "@/features/scales/useScales";
 import {useState} from "react";
-import useGameStore from "@/store/useGameStore";
+import useGameStore from "@/shared/store/useGameStore";
 const Tone = require('tone/build/Tone.js');
 
 const PreparationScreen = () => {

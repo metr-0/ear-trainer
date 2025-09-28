@@ -1,10 +1,10 @@
-import HLGameScreen from "@/components/higherLowerGame/HLGameScreen";
+import HLGameScreen from "@/features/higherLowerGame/HLGameScreen";
 import {useLocalSearchParams} from "expo-router";
-import useGameStore from "@/store/useGameStore";
+import useGameStore from "@/shared/store/useGameStore";
 import {useEffect} from "react";
-import GameSettings from "@/components/GameSettings";
-import GameMode from "@/components/GameMode";
-import RMGameScreen from "@/components/repeatMelodyGame/RMGameScreen";
+import GameSettings from "@/shared/GameSettings";
+import GameMode from "@/shared/GameMode";
+import RMGameScreen from "@/features/repeatMelodyGame/RMGameScreen";
 
 const GameScreen = () => {
   const {bpm, game} = useLocalSearchParams<{ bpm?: string, game?: string }>();
