@@ -17,8 +17,6 @@ import usePiano from "@/features/piano/usePiano";
 import GameState from "@/shared/GameState";
 
 export default function RMGameScreen() {
-  const maxCount = 3;
-
   const {ready, generateNext, reset} = useMelodyGenerator(
     "https://metr-0.github.io/melody-gen/model/model.json"
   );
@@ -34,7 +32,7 @@ export default function RMGameScreen() {
 
   const indicator = useIndicator();
   const countdown = useCountdown();
-  const counter = useCounter(maxCount);
+  const counter = useCounter(settings.melodyLength);
 
   const paused = useGameStore(state => state.paused);
   const setPaused = useGameStore(state => state.setPaused);
@@ -49,7 +47,7 @@ export default function RMGameScreen() {
     playNote(midi);
     userAnswerRef.current.push(midi);
 
-    if (userAnswerRef.current.length === maxCount)
+    if (userAnswerRef.current.length === settings.melodyLength)
       loopRef.current?.forceNextPhase();
   }
 
@@ -75,7 +73,7 @@ export default function RMGameScreen() {
 
         piano.set(range[0], correctAnswerRef.current[0]);
 
-        for (let i = 1; i < maxCount; ++i)
+        for (let i = 1; i < settings.melodyLength; ++i)
           correctAnswerRef.current.push(generateNext(range) as any);
 
         const interval = (60_000 / settings.bpm);
@@ -152,7 +150,7 @@ export default function RMGameScreen() {
         />
       </Pressable>
 
-      <Score maxHp={10} />
+      <Score settings={settings} />
 
       <View style={{
         display: "flex", flexDirection: "column", alignItems: "center",

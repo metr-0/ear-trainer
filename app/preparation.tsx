@@ -4,6 +4,7 @@ import colors from "@/shared/constants/Colors";
 import useScales from "@/features/scales/useScales";
 import {useState} from "react";
 import useGameStore from "@/shared/store/useGameStore";
+import GameMode from "@/shared/GameMode";
 const Tone = require('tone/build/Tone.js');
 
 const PreparationScreen = () => {
@@ -17,6 +18,12 @@ const PreparationScreen = () => {
   const [bpm, setBpm] = useState<number>(30);
   const bpmOptions = [15, 30, 45, 60, 75, 90];
 
+  const [mode, setMode] = useState<GameMode>(GameMode.LIMITED);
+  const modeOptions = [GameMode.LIMITED, GameMode.INFINITE];
+
+  const [melodyLength, setMelodyLength] = useState<number>(3);
+  const melodyLengthOptions = [2, 3, 5, 7, 9, 12];
+
   const [audioStarted, setAudioStarted] = useState(false);
 
   const startGame = async () => {
@@ -26,7 +33,15 @@ const PreparationScreen = () => {
     }
 
     reset();
-    router.push({ pathname: "/game", params: { game, bpm } });
+    router.push({
+      pathname: "/game",
+      params: {
+        game,
+        bpm,
+        mode,
+        melodyLength: game === "Repeat-Melody" ? melodyLength : undefined
+      }
+    });
   };
 
   return (
@@ -100,7 +115,7 @@ const PreparationScreen = () => {
           flexWrap: "wrap",
           justifyContent: "center",
           gap: 10,
-          marginBottom: scales.screen.height * 0.15,
+          marginBottom: scales.screen.height * 0.05,
         }}
       >
         {bpmOptions.map((option) => (
@@ -108,7 +123,7 @@ const PreparationScreen = () => {
             key={option}
             onPress={() => setBpm(option)}
             style={{
-              width: scales.screen.width * 0.2,
+              width: scales.screen.width * 0.1,
               paddingVertical: 10,
               margin: 5,
               borderRadius: 10,
@@ -122,7 +137,7 @@ const PreparationScreen = () => {
             <Text
               style={{
                 color: bpm === option ? colors.white : colors.black,
-                fontSize: 16,
+                fontSize: scales.screen.height * .03,
                 fontWeight: "600",
               }}
             >
@@ -131,6 +146,106 @@ const PreparationScreen = () => {
           </Pressable>
         ))}
       </View>
+
+      <Text
+        style={{
+          color: colors.black,
+          fontSize: scales.screen.height * .05,
+          fontWeight: "bold",
+          marginBottom: scales.screen.height * .02
+        }}
+      >
+        Mode:
+      </Text>
+
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "center",
+          marginBottom: scales.screen.height * 0.05,
+        }}
+      >
+        {modeOptions.map((option) => (
+          <Pressable
+            key={option}
+            onPress={() => setMode(option)}
+            style={{
+              width: scales.screen.width * 0.3,
+              paddingVertical: 10,
+              margin: 5,
+              borderRadius: 10,
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: mode === option ? colors.black : colors.white,
+              borderWidth: 2,
+              borderColor: colors.black,
+            }}
+          >
+            <Text
+              style={{
+                color: mode === option ? colors.white : colors.black,
+                fontSize: scales.screen.height * .03,
+                fontWeight: "600",
+              }}
+            >
+              {option === GameMode.INFINITE ? "Infinite" : "Limited"}
+            </Text>
+          </Pressable>
+        ))}
+      </View>
+
+      {game === "Repeat-Melody" && (
+        <>
+          <Text
+            style={{
+              color: colors.black,
+              fontSize: scales.screen.height * .05,
+              fontWeight: "bold",
+              marginBottom: scales.screen.height * .02
+            }}
+          >
+            Melody Length:
+          </Text>
+
+          <View
+            style={{
+              flexDirection: "row",
+              flexWrap: "wrap",
+              justifyContent: "center",
+              gap: 10,
+              marginBottom: scales.screen.height * 0.05,
+            }}
+          >
+            {melodyLengthOptions.map((option) => (
+              <Pressable
+                key={option}
+                onPress={() => setMelodyLength(option)}
+                style={{
+                  width: scales.screen.width * 0.1,
+                  paddingVertical: 10,
+                  margin: 5,
+                  borderRadius: 10,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: melodyLength === option ? colors.black : colors.white,
+                  borderWidth: 2,
+                  borderColor: colors.black,
+                }}
+              >
+                <Text
+                  style={{
+                    color: melodyLength === option ? colors.white : colors.black,
+                    fontSize: scales.screen.height * .03,
+                    fontWeight: "600",
+                  }}
+                >
+                  {option}
+                </Text>
+              </Pressable>
+            ))}
+          </View>
+        </>
+      )}
     </View>
   );
 };

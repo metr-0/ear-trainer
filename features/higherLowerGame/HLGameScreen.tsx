@@ -149,7 +149,7 @@ export default function HLGameScreen() {
         />
       </Pressable>
 
-      <Score maxHp={10} />
+      <Score settings={settings} />
 
       <View style={{
         display: "flex", flexDirection: "column", alignItems: "center",

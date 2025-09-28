@@ -7,7 +7,7 @@ const useGameStore = create<GameStore>((set) => ({
   paused: false,
   setPaused: (value) => set({ paused: value }),
 
-  settings: new GameSettings(15, GameMode.LIMITED, 10),
+  settings: new GameSettings(30, GameMode.LIMITED, 3,10),
   setSettings: (value) => set({ settings: value }),
 
   totalScore: 0,
@@ -25,6 +25,7 @@ const useGameStore = create<GameStore>((set) => ({
       settings: {
         bpm: 30,
         mode: GameMode.LIMITED,
+        melodyLength: 3,
         maxHp: 10
       },
       totalScore: 0,
