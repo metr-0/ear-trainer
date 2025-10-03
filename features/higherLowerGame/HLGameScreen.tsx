@@ -1,5 +1,5 @@
 import React, {useEffect, useRef} from "react";
-import {Image, Pressable, View} from "react-native";
+import {Image, Pressable, Text, View} from "react-native";
 import {useRouter} from "expo-router";
 
 import LanesBackground from "@/features/lanesBackground/LanesBackground";
@@ -119,6 +119,19 @@ export default function HLGameScreen() {
     }
     return () => loopRef.current?.stop();
   }, [paused, ready]);
+
+  if (!ready) return <View style={{
+    flex: 1,
+    backgroundColor: colors.black,
+    alignItems: 'center',
+    justifyContent: 'center',
+  }}>
+    <Text style={{
+      color: colors.white,
+      fontSize: scales.screen.height * .1,
+      fontWeight: "bold",
+    }}>Loading...</Text>
+  </View>
 
   return (
     <View

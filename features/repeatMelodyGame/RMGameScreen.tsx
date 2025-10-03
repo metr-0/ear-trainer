@@ -1,5 +1,5 @@
 import React, {useEffect, useRef} from "react";
-import {Image, Pressable, View} from "react-native";
+import {Image, Pressable, View, Text} from "react-native";
 import {useRouter} from "expo-router";
 import useScales from "@/features/scales/useScales";
 import GameLoop from "@/features/loop/GameLoop";
@@ -121,6 +121,19 @@ export default function RMGameScreen() {
     }
     return () => loopRef.current?.stop();
   }, [paused, ready]);
+
+  if (!ready) return <View style={{
+    flex: 1,
+    backgroundColor: colors.black,
+    alignItems: 'center',
+    justifyContent: 'center',
+  }}>
+    <Text style={{
+      color: colors.white,
+      fontSize: scales.screen.height * .1,
+      fontWeight: "bold",
+    }}>Loading...</Text>
+  </View>
 
   return (
     <View

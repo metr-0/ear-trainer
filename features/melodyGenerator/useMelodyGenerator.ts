@@ -10,8 +10,12 @@ const useMelodyGenerator = (modelUrl: string) => {
   const sequenceRef = useRef<number[]>([]);
 
   useEffect(() => {
+    setReady(false);
     (async () => {
       modelRef.current = await tf.loadGraphModel(modelUrl);
+      reset([50]);
+      generateNext();
+      reset([]);
       setReady(true);
     })();
   }, [modelUrl]);
